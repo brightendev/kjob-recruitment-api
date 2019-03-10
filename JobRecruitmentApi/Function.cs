@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace JobRecruitmentApi
 {
-    public static class Function1
+    public static class Function
     {
 
         [FunctionName("Register")]
@@ -24,7 +24,8 @@ namespace JobRecruitmentApi
             string requestAccountData = req.Query["account"];
 
 
-            return requestAccountData;
+
+            return await System.AzureActiveDirectory.CreateAccount("", "");
         }
     }
 }

@@ -21,10 +21,10 @@ namespace JobRecruitmentApi
         {
             log.LogInformation("RegisterAccount Function has been called");
 
-            string accountData = req.Query["account"];
+            string requestAccountData = req.Query["account"];
 
 
-            return accountData;
+            return requestAccountData;
         }
     }
 }

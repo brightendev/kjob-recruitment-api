@@ -4,7 +4,17 @@ using System.Text;
 
 namespace JobRecruitmentApi.Api
 {
-    class Account
+    static class Account
     {
+
+        public static void CreateAccount() {
+
+        }
+
+        private static string decodedCreatingAccountRequestData() {
+
+            return "";
+        }
+
     }
 }

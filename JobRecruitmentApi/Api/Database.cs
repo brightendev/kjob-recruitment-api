@@ -4,7 +4,7 @@ using System.Text;
 
 namespace JobRecruitmentApi.Api
 {
-    class Database
+    static class Database
     {
     }
 }

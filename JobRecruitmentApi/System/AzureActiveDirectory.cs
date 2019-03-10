@@ -19,7 +19,7 @@ namespace JobRecruitmentApi.System
         private static readonly HttpClient httpClient = new HttpClient();
 
 
-        public static async Task<string> GetAccessTokenForGraph() {
+        private static async Task<string> getAccessTokenForGraph() {
 
             string url = $"https://login.microsoftonline.com/{tenant}/oauth2/token";
             string apiResource = "https://graph.microsoft.com/";
@@ -53,7 +53,7 @@ namespace JobRecruitmentApi.System
         public static async Task<string> CreateAccount(string username, string password) {
 
             string url = "https://graph.microsoft.com/v1.0/users";
-            string apiAuthToken = await GetAccessTokenForGraph();
+            string apiAuthToken = await getAccessTokenForGraph();
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiAuthToken);
 

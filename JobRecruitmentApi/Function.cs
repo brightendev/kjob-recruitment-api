@@ -23,9 +23,10 @@ namespace JobRecruitmentApi
 
             string requestAccountData = req.Query["account"];
 
+            string email = req.Query["email"];
+            string password = req.Query["password"];
 
-
-            return await System.AzureActiveDirectory.CreateAccount("", "");
+            return await System.AzureActiveDirectory.CreateAccount(email, password);
         }
     }
 }

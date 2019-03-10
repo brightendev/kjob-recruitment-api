@@ -7,7 +7,9 @@ namespace JobRecruitmentApi.Api
     static class Account
     {
 
-        public static void CreateAccount() {
+        public async static void CreateAccount() {
+
+            string graphAccessToken = await System.AzureActiveDirectory.GetAccessTokenForGraph();
 
         }
 

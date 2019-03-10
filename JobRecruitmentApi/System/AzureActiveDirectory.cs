@@ -57,9 +57,6 @@ namespace JobRecruitmentApi.System
 
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiAuthToken);
 
-            username = "Brighttt";
-            password = "Metbright5834725";
-
             var requestPayload = new
             {
                 accountEnabled = "true",
@@ -83,8 +80,7 @@ namespace JobRecruitmentApi.System
                 return await response.Content.ReadAsStringAsync(); ;
 
             }
-
-            return "error";
+            return "[ERROR]";
         }
 
     }

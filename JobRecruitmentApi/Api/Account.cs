@@ -19,9 +19,7 @@ namespace JobRecruitmentApi.Api
 
         private static string convertEmailToUsername(string email) {
 
-            string output = email.Replace("@", "_A_");
-
-            return output.Replace(".", "_D_");
+            return email.Replace("@", "_A_").Replace(".", "_D_");
         }
 
     }

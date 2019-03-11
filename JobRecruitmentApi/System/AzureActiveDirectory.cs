@@ -62,9 +62,9 @@ namespace JobRecruitmentApi.System
                 accountEnabled = "true",
                 displayName = username,
                 mailNickname = "mail",
-                userPrincipalName = username+"@"+tenant,
+                userPrincipalName = $"{username}@{tenant}",
                 passwordProfile = new {
-                    forceChangePasswordNextSignIn = "true",
+                    forceChangePasswordNextSignIn = "false",
                     password = password
                 }
             };
@@ -77,10 +77,11 @@ namespace JobRecruitmentApi.System
             if (response.StatusCode == HttpStatusCode.OK)
             {
 
-                return await response.Content.ReadAsStringAsync(); ;
+                return await response.Content.ReadAsStringAsync(); 
 
             }
-            return "[ERROR]";
+            string r = await response.Content.ReadAsStringAsync(); 
+            return "CODE = "+response.StatusCode+" "+ r;
         }
 
     }

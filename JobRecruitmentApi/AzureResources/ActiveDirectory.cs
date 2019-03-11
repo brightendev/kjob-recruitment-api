@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace JobRecruitmentApi.System
+namespace JobRecruitmentApi.AzureResources
 {
-    static class AzureActiveDirectory
+    static class ActiveDirectory
     {
         private static readonly string tenant = "jobrecruitment.onmicrosoft.com";
         private static readonly string clientID = "9a82b6ec-a884-4294-b355-0f4f59ea9444";
@@ -74,14 +74,14 @@ namespace JobRecruitmentApi.System
 
             HttpResponseMessage response = await httpClient.PostAsync(url, requestContent);
 
-            if (response.StatusCode == HttpStatusCode.OK)
+         /*   if (response.StatusCode == HttpStatusCode.OK)
             {
 
                 return await response.Content.ReadAsStringAsync(); 
 
-            }
-            string r = await response.Content.ReadAsStringAsync(); 
-            return "CODE = "+response.StatusCode+" "+ r;
+            }*/
+
+            return await response.Content.ReadAsStringAsync();
         }
 
     }

@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace JobRecruitmentApi.Api
+namespace JobRecruitmentApi.AzureResources
 {
-    static class Database
+    static class SqlDatabase
     {
-
-
-
     }
 }

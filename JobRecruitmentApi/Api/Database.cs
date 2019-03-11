@@ -6,5 +6,8 @@ namespace JobRecruitmentApi.Api
 {
     static class Database
     {
+
+
+
     }
 }

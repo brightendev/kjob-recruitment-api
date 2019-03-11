@@ -74,14 +74,14 @@ namespace JobRecruitmentApi.AzureResources
 
             HttpResponseMessage response = await httpClient.PostAsync(url, requestContent);
 
-            if (response.StatusCode == HttpStatusCode.OK)
+         /*   if (response.StatusCode == HttpStatusCode.OK)
             {
 
                 return await response.Content.ReadAsStringAsync(); 
 
-            }
-            string r = await response.Content.ReadAsStringAsync(); 
-            return "CODE = "+response.StatusCode+" "+ r;
+            }*/
+
+            return await response.Content.ReadAsStringAsync();
         }
 
     }

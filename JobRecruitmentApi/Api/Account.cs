@@ -36,7 +36,7 @@ namespace JobRecruitmentApi.Api
             if(respJsonObject != null) {
                 if(respJsonObject["id"] != null) return respJsonObject["id"].Value<string>();
 
-                return "creating account failed";
+                return payload;
             }
 
             return "unkown error";

@@ -21,8 +21,6 @@ namespace JobRecruitmentApi
         {
             log.LogInformation("RegisterAccount Function has been called");
 
-            string requestAccountData = req.Query["account"];
-
             string email = req.Query["email"];
             string password = req.Query["password"];
 

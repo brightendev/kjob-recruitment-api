@@ -16,10 +16,6 @@ namespace JobRecruitmentApi.Api
             return await System.AzureActiveDirectory.CreateAccount(email, password);
         }
 
-        private static string decodedCreatingAccountRequestData() {
-
-            return "";
-        }
 
     }
 }

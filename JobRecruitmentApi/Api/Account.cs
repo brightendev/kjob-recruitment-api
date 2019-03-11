@@ -13,9 +13,16 @@ namespace JobRecruitmentApi.Api
 
          //   string graphAccessToken = await System.AzureActiveDirectory.getAccessTokenForGraph();
 
-            return await System.AzureActiveDirectory.CreateAccount(email, password);
+            return await AzureResources.ActiveDirectory.CreateAccount(convertEmailToUsername(email), password);
         }
 
+
+        private static string convertEmailToUsername(string email) {
+
+            string output = email.Replace("@", "_A_");
+
+            return output.Replace(".", "_D_");
+        }
 
     }
 }

@@ -17,7 +17,7 @@ namespace JobRecruitmentApi.AzureResources
 
         private static async Task<string> NoQuery(string sql)
         {
-            string connectionString = Environment.GetEnvironmentVariable("gac");
+            string connectionString = Environment.GetEnvironmentVariable("sql_write");
             try
             {
                 if (sql == null || sql.Equals(""))

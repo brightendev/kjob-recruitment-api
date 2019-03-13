@@ -19,8 +19,9 @@ namespace JobRecruitmentApi.Api
 
             string accountId = extractAccountId(createAccountResponsePayload);
 
-            // TODO call Database API to initialize account data.
-            return accountId;
+            Console.WriteLine($"EMAIL= {email} UID= {accountId}");
+
+            return await Api.Database.CreatNewAccount(accountId, email);
         }
 
 

@@ -27,22 +27,13 @@ namespace JobRecruitmentApi
             return await Api.Account.CreateAccount(email, password);
         }
 
-        [FunctionName("TestShowAccount")]
+        [FunctionName("CheckEmail")]
         public static async Task<string> ShowAccount(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            return await Api.Database.ShowAccount();
-        }
-
-        [FunctionName("TestNewAccount")]
-        public static async Task<string> NewAccount(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
-        {
-            string uid = req.Query["uid"];
             string email = req.Query["email"];
-            return await Api.Database.CreatNewAccount(uid, email);
+            return await Api.Database.CheckEmail(email);
         }
     }
 }

@@ -4,6 +4,6 @@
     "AzureWebJobsStorage": "",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
     "sql_read": "Server=tcp:jobrecruitmentsqlserver.database.windows.net,1433;Initial Catalog=JobRecruitmentSqlDatabase;Persist Security Info=False;User ID=user_read;Password=s{<Udk6P--m&v*8[;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
-    "sql_write": "Server=tcp:jobrecruitmentsqlserver.database.windows.net,1433;Initial Catalog=JobRecruitmentSqlDatabase;Persist Security Info=False;User ID=user_write;Password=];Kj7TUr%9e$mA`>b?89+.;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    "sql_write": "Server=tcp:jobrecruitmentsqlserver.database.windows.net,1433;Initial Catalog=JobRecruitmentSqlDatabase;Persist Security Info=False;User ID=user_write;Password=]Kj7TUr%9e$mA`>b?89+.;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   }
 }

@@ -20,10 +20,15 @@ namespace JobRecruitmentApi.Api
             string sqlQuery = $"INSERT INTO [dbo].[Account] ([uid],[email],[role]) VALUES('{uid}','{email}',1);";
             return await AzureResources.SqlDatabase.Insert(sqlQuery);
         }
-        public static async Task<string> ShowAccount()
-        {          
-            string sqlQuery = $"SELECT * FROM dbo.Account";
-            return await AzureResources.SqlDatabase.Select(sqlQuery);
+        public static async Task<string> CheckEmail(string email)
+        {
+            string sqlQuery = $"SELECT * FROM dbo.Account WHERE email='{email}';";
+            string st=await AzureResources.SqlDatabase.Select(sqlQuery);
+            if (st.Equals("[]"))
+            {
+                return "OK";
+            }
+            return "NO";
         }
 
 

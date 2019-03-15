@@ -24,8 +24,6 @@ namespace JobRecruitmentApi.AzureResources
             string url = $"https://login.microsoftonline.com/{tenant}/oauth2/token";
             string apiResource = "https://graph.microsoft.com/";
 
-            Console.WriteLine("request accept = " + httpClient.DefaultRequestHeaders.AcceptEncoding);
-
             HttpContent requestContent = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 { "grant_type", "client_credentials" },
@@ -36,8 +34,6 @@ namespace JobRecruitmentApi.AzureResources
 
             HttpResponseMessage response = await httpClient.PostAsync(url, requestContent);
 
-            Console.WriteLine("response content type = " + response.Content.Headers.ContentType);
-
             if (response.StatusCode == HttpStatusCode.OK) {
 
                 string respJson = await response.Content.ReadAsStringAsync();
@@ -47,15 +43,13 @@ namespace JobRecruitmentApi.AzureResources
                 return accessToken;
 
             }
-            return "[ERROR]";
+            return await response.Content.ReadAsStringAsync();   // error
         }
 
         public static async Task<string> CreateAccount(string username, string password) {
 
             string url = "https://graph.microsoft.com/v1.0/users";
             string apiAuthToken = await getAccessTokenForGraph();
-
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiAuthToken);
 
             var requestPayload = new
             {
@@ -71,18 +65,50 @@ namespace JobRecruitmentApi.AzureResources
 
             HttpContent requestContent = new StringContent(JsonConvert.SerializeObject(requestPayload), Encoding.UTF8, "application/json");
 
-
-            HttpResponseMessage response = await httpClient.PostAsync(url, requestContent);
-
-         /*   if (response.StatusCode == HttpStatusCode.OK)
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url)
             {
+                Content = requestContent,
+                Headers = {
+                    Authorization = new AuthenticationHeaderValue("Bearer", apiAuthToken),
+                }
+            };
 
-                return await response.Content.ReadAsStringAsync(); 
-
-            }*/
+            HttpResponseMessage response = await httpClient.SendAsync(request);
 
             return await response.Content.ReadAsStringAsync();
         }
 
+        public static async Task<string> GetAccessTokenOfUser(string username, string password) {
+
+            string url = $"https://login.microsoftonline.com/{tenant}/oauth2/token";
+            string apiResource = "https://graph.microsoft.com/";
+
+            HttpContent requestContent = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                { "grant_type", "password" },
+                { "client_id", clientID },
+                { "client_secret", clientSecret },
+                { "username", $"{username}@{tenant}" },
+                { "password", password},
+                { "resource", apiResource }
+            });
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url) {
+                Content = requestContent
+            };
+
+            HttpResponseMessage response = await httpClient.SendAsync(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                string respJson = await response.Content.ReadAsStringAsync();
+                JObject respJsonObject = JsonConvert.DeserializeObject(respJson) as JObject;
+                string accessToken = respJsonObject["access_token"].Value<string>();
+
+                return accessToken;
+            }
+            return await response.Content.ReadAsStringAsync();  // error
+
+        }
     }
 }

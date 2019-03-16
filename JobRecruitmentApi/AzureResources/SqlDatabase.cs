@@ -89,5 +89,6 @@ namespace JobRecruitmentApi.AzureResources
                 return $"ERROR:{ex.Message}";
             }
         }
+
     }
 }

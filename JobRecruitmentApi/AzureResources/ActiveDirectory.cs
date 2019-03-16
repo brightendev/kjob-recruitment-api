@@ -41,7 +41,6 @@ namespace JobRecruitmentApi.AzureResources
                 string accessToken = respJsonObject["access_token"].Value<string>();
 
                 return accessToken;
-
             }
             return await response.Content.ReadAsStringAsync();   // error
         }
@@ -78,7 +77,7 @@ namespace JobRecruitmentApi.AzureResources
             return await response.Content.ReadAsStringAsync();
         }
 
-        public static async Task<string> GetUserAccessToken(string username, string password) {
+        public static async Task<string> TryToGetUserAccessToken(string username, string password) {
 
             string url = $"https://login.microsoftonline.com/{tenant}/oauth2/token";
             string apiResource = "https://graph.microsoft.com/";
@@ -107,8 +106,12 @@ namespace JobRecruitmentApi.AzureResources
 
                 return accessToken;
             }
-            return await response.Content.ReadAsStringAsync();  // error
 
+            if(areUserCredentialsIncorrect(await response.Content.ReadAsStringAsync())) {
+                return "AADSTS50126";
+            }
+
+            return await response.Content.ReadAsStringAsync();  // error
         }
 
         public static async Task<string> SignInWithToken(string token) {
@@ -125,6 +128,12 @@ namespace JobRecruitmentApi.AzureResources
             HttpResponseMessage response = await httpClient.SendAsync(request);
 
             return await response.Content.ReadAsStringAsync();
+        }
+
+        private static bool areUserCredentialsIncorrect(string payload) {
+
+            if(payload.Contains("AADSTS50126")) return true;
+            return false;
         }
     }
 }

@@ -29,11 +29,12 @@ namespace JobRecruitmentApi.Api
 
         public static async Task<string> AuthenticateAsUser(string email, string password) {
 
-            string token = await AzureResources.ActiveDirectory.GetUserAccessToken(convertEmailToUsername(email), password);
-            Console.WriteLine($"user token : {token}");
+            string token = await AzureResources.ActiveDirectory.TryToGetUserAccessToken(convertEmailToUsername(email), password);
+
+            if(token.Equals("AADSTS50126")) return "Credentials are wrong";
+
             return await AzureResources.ActiveDirectory.SignInWithToken(token);
         }
-
 
         private static string convertEmailToUsername(string email) {
 
@@ -57,5 +58,6 @@ namespace JobRecruitmentApi.Api
 
             return "unkown error";
         }
+
     }
 }

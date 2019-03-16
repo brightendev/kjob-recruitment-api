@@ -78,7 +78,7 @@ namespace JobRecruitmentApi.AzureResources
             return await response.Content.ReadAsStringAsync();
         }
 
-        public static async Task<string> GetAccessTokenOfUser(string username, string password) {
+        public static async Task<string> GetUserAccessToken(string username, string password) {
 
             string url = $"https://login.microsoftonline.com/{tenant}/oauth2/token";
             string apiResource = "https://graph.microsoft.com/";
@@ -109,6 +109,22 @@ namespace JobRecruitmentApi.AzureResources
             }
             return await response.Content.ReadAsStringAsync();  // error
 
+        }
+
+        public static async Task<string> SignInWithToken(string token) {
+
+            string url = "https://graph.microsoft.com/v1.0/me";
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url)
+            {
+                Headers = {
+                    Authorization = new AuthenticationHeaderValue("Bearer", token),
+                }
+            };
+
+            HttpResponseMessage response = await httpClient.SendAsync(request);
+
+            return await response.Content.ReadAsStringAsync();
         }
     }
 }

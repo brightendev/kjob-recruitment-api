@@ -29,9 +29,9 @@ namespace JobRecruitmentApi.Api
 
         public static async Task<string> AuthenticateAsUser(string email, string password) {
 
-
-
-            return await AzureResources.ActiveDirectory.GetAccessTokenOfUser(convertEmailToUsername(email), password);
+            string token = await AzureResources.ActiveDirectory.GetUserAccessToken(convertEmailToUsername(email), password);
+            Console.WriteLine($"user token : {token}");
+            return await AzureResources.ActiveDirectory.SignInWithToken(token);
         }
 
 

@@ -27,7 +27,25 @@ namespace JobRecruitmentApi.Api
             return createAccountResponsePayload;
         }
 
-        public static async Task<string> AuthenticateUser(string email, string password) {
+        public static async Task<string> UserSignin(string email, string password) {
+
+            string authResponse = await AuthenticateUser(email, password);
+
+            if (authResponse.Equals(AzureResources.ActiveDirectory.LoginError.WrongCredentials.ToString()) ||
+                authResponse.Equals(AzureResources.ActiveDirectory.LoginError.UserNotExist.ToString()))
+                return authResponse;
+
+            string accountId = extractAccountId(authResponse);
+
+            var payload = new {
+                uid = accountId,
+                role = "Candidate"
+            };
+
+            return JsonConvert.SerializeObject(payload);
+        }
+
+        private static async Task<string> AuthenticateUser(string email, string password) {
 
             string token = await AzureResources.ActiveDirectory.TryToGetUserAccessToken(convertEmailToUsername(email), password);
 
@@ -38,7 +56,7 @@ namespace JobRecruitmentApi.Api
             return await AzureResources.ActiveDirectory.SignInWithToken(token);
         }
 
-        public static async Task<char> IsaccountExist(string email) {
+        public static async Task<char> IsAccountExist(string email) {
 
             if (await AzureResources.ActiveDirectory.AccountIsExist(email))
             {
@@ -72,5 +90,7 @@ namespace JobRecruitmentApi.Api
             return "unkown error";
         }
 
+
+        
     }
 }

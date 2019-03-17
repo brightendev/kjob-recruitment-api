@@ -27,15 +27,28 @@ namespace JobRecruitmentApi.Api
             return createAccountResponsePayload;
         }
 
-        public static async Task<string> AuthenticateAsUser(string email, string password) {
+        public static async Task<string> AuthenticateUser(string email, string password) {
 
             string token = await AzureResources.ActiveDirectory.TryToGetUserAccessToken(convertEmailToUsername(email), password);
 
-            if(token.Equals("AADSTS50126")) return "Credentials are wrong";
+            if(token.Equals(AzureResources.ActiveDirectory.LoginError.WrongCredentials.ToString()) ||
+               token.Equals(AzureResources.ActiveDirectory.LoginError.UserNotExist.ToString()))
+                return token;
 
             return await AzureResources.ActiveDirectory.SignInWithToken(token);
         }
 
+        public static async Task<char> IsaccountExist(string email) {
+
+            if (await AzureResources.ActiveDirectory.AccountIsExist(email))
+            {
+                return 'T';
+            }
+
+            return 'F';
+        }
+
+        /// ==================================
         private static string convertEmailToUsername(string email) {
 
             return email.Replace("@", "_A_").Replace(".", "_D_");

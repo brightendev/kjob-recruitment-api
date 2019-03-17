@@ -38,7 +38,20 @@ namespace JobRecruitmentApi
             string email = req.Query["email"];
             string password = req.Query["password"];
 
-            return await Api.Account.AuthenticateAsUser(email, password);
+            return await Api.Account.AuthenticateUser(email, password);
+        }
+
+        [FunctionName("IsAccountExist")]
+        public static async Task<char> IsAccountExist(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
+
+        {
+            log.LogInformation("IsAccountExist Function has been called");
+
+            string email = req.Query["email"];
+
+            return await Api.Account.IsaccountExist(email);
         }
 
         // ============= Database =======================

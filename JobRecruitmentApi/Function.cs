@@ -38,7 +38,7 @@ namespace JobRecruitmentApi
             string email = req.Query["email"];
             string password = req.Query["password"];
 
-            return await Api.Account.AuthenticateUser(email, password);
+            return await Api.Account.UserSignin(email, password);
         }
 
         [FunctionName("IsAccountExist")]
@@ -51,7 +51,7 @@ namespace JobRecruitmentApi
 
             string email = req.Query["email"];
 
-            return await Api.Account.IsaccountExist(email);
+            return await Api.Account.IsAccountExist(email);
         }
 
         // ============= Database =======================

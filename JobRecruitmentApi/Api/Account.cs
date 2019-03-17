@@ -31,13 +31,18 @@ namespace JobRecruitmentApi.Api
 
             string authResponse = await AuthenticateUser(email, password);
 
-            if (authResponse.Equals(AzureResources.ActiveDirectory.LoginError.WrongCredentials.ToString()) ||
-                authResponse.Equals(AzureResources.ActiveDirectory.LoginError.UserNotExist.ToString()))
-                return authResponse;
+            if(authResponse.Equals(AzureResources.ActiveDirectory.LoginError.WrongCredentials.ToString()) ||
+               authResponse.Equals(AzureResources.ActiveDirectory.LoginError.UserNotExist.ToString())) {
 
+                return JsonConvert.SerializeObject(new {
+                    error = authResponse
+                });
+            }
+                
             string accountId = extractAccountId(authResponse);
 
             var payload = new {
+                email = email,
                 uid = accountId,
                 role = "Candidate"
             };

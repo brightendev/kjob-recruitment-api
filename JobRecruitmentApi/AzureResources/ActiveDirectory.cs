@@ -18,6 +18,10 @@ namespace JobRecruitmentApi.AzureResources
 
         private static readonly HttpClient httpClient = new HttpClient();
 
+        public enum LoginError
+        {
+            UserNotExist, WrongCredentials
+        }
 
         private static async Task<string> getAccessTokenForGraph() {
 
@@ -106,10 +110,9 @@ namespace JobRecruitmentApi.AzureResources
 
                 return accessToken;
             }
-
-            if(areUserCredentialsIncorrect(await response.Content.ReadAsStringAsync())) {
-                return "AADSTS50126";
-            }
+            string responsePayload = await response.Content.ReadAsStringAsync();
+            if(responsePayload.Contains("AADSTS50034")) return LoginError.UserNotExist.ToString();
+            if(responsePayload.Contains("AADSTS50126")) return LoginError.WrongCredentials.ToString();
 
             return await response.Content.ReadAsStringAsync();  // error
         }
@@ -130,10 +133,25 @@ namespace JobRecruitmentApi.AzureResources
             return await response.Content.ReadAsStringAsync();
         }
 
-        private static bool areUserCredentialsIncorrect(string payload) {
+        public static async Task<bool> AccountIsExist(string email) {
 
-            if(payload.Contains("AADSTS50126")) return true;
-            return false;
+            string url = $"https://graph.microsoft.com/v1.0/users/{email}";
+            string apiAuthToken = await getAccessTokenForGraph();
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url)
+            {
+                Headers = {
+                    Authorization = new AuthenticationHeaderValue("Bearer", apiAuthToken),
+                }
+            };
+
+            HttpResponseMessage response = await httpClient.SendAsync(request);
+
+            string responsePayload = await response.Content.ReadAsStringAsync();
+            if(responsePayload.Contains("Request_ResourceNotFound")) return false;
+
+            return true;
+
         }
     }
 }

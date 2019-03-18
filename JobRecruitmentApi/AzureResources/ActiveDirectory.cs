@@ -18,6 +18,11 @@ namespace JobRecruitmentApi.AzureResources
 
         private static readonly HttpClient httpClient = new HttpClient();
 
+        public enum RegisterError
+        {
+            PasswordNotSet, PasswordComplexityRequirement, InvalidPasswordLength, UserAlreadyExist
+        }
+
         public enum LoginError
         {
             UserNotExist, WrongCredentials
@@ -78,6 +83,16 @@ namespace JobRecruitmentApi.AzureResources
 
             HttpResponseMessage response = await httpClient.SendAsync(request);
 
+            string responsePayload = await response.Content.ReadAsStringAsync();
+            if(responsePayload.Contains("password does not comply with password complexity requirements"))
+                return RegisterError.PasswordComplexityRequirement.ToString();
+            if(responsePayload.Contains("A password must be specified to create a new user"))
+                return RegisterError.PasswordNotSet.ToString();
+            if(responsePayload.Contains("passwordProfile.password") && responsePayload.Contains("InvalidLength"))
+                return RegisterError.InvalidPasswordLength.ToString();
+            if(responsePayload.Contains("userPrincipalName already exists"))
+                return RegisterError.UserAlreadyExist.ToString();
+
             return await response.Content.ReadAsStringAsync();
         }
 
@@ -110,6 +125,7 @@ namespace JobRecruitmentApi.AzureResources
 
                 return accessToken;
             }
+
             string responsePayload = await response.Content.ReadAsStringAsync();
             if(responsePayload.Contains("AADSTS50034")) return LoginError.UserNotExist.ToString();
             if(responsePayload.Contains("AADSTS50126")) return LoginError.WrongCredentials.ToString();

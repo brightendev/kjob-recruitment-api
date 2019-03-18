@@ -16,30 +16,42 @@ namespace JobRecruitmentApi.Api
 
          //   string graphAccessToken = await System.AzureActiveDirectory.getAccessTokenForGraph();
 
-            string createAccountResponsePayload = await AzureResources.ActiveDirectory.CreateAccount(convertEmailToUsername(email), password);
+            string createAccountResult = await AzureResources.ActiveDirectory.CreateAccount(convertEmailToUsername(email), password);
 
-            string accountId = extractAccountId(createAccountResponsePayload);
+            if (createAccountResult.Equals(AzureResources.ActiveDirectory.RegisterError.UserAlreadyExist.ToString()) ||
+                createAccountResult.Equals(AzureResources.ActiveDirectory.RegisterError.PasswordComplexityRequirement.ToString()) ||
+                createAccountResult.Equals(AzureResources.ActiveDirectory.RegisterError.InvalidPasswordLength.ToString()) ||
+                createAccountResult.Equals(AzureResources.ActiveDirectory.RegisterError.PasswordNotSet.ToString()))
+            {
+
+                return JsonConvert.SerializeObject(new
+                {
+                    error = createAccountResult
+                });
+            }
+
+            string accountId = extractAccountId(createAccountResult);
 
             Console.WriteLine($"EMAIL= {email} UID= {accountId}");
 
             await Api.Database.CreatNewAccount(accountId, email);
 
-            return createAccountResponsePayload;
+            return "RegisterSuccess"; ;
         }
 
         public static async Task<string> UserSignin(string email, string password) {
 
-            string authResponse = await AuthenticateUser(email, password);
+            string authenticateResult = await AuthenticateUser(email, password);
 
-            if(authResponse.Equals(AzureResources.ActiveDirectory.LoginError.WrongCredentials.ToString()) ||
-               authResponse.Equals(AzureResources.ActiveDirectory.LoginError.UserNotExist.ToString())) {
+            if(authenticateResult.Equals(AzureResources.ActiveDirectory.LoginError.WrongCredentials.ToString()) ||
+               authenticateResult.Equals(AzureResources.ActiveDirectory.LoginError.UserNotExist.ToString())) {
 
                 return JsonConvert.SerializeObject(new {
-                    error = authResponse
+                    error = authenticateResult
                 });
             }
                 
-            string accountId = extractAccountId(authResponse);
+            string accountId = extractAccountId(authenticateResult);
 
             var payload = new {
                 email = email,

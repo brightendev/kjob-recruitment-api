@@ -88,6 +88,39 @@ namespace JobRecruitmentApi
             return await Api.Database.CreateProfile(personal_id,thai_name,eng_name,date_of_birth,nationality,
                 race,religion,blood,relationship,child,military_criterion,address,province,telephone,email,owner_uid);
         }
-   
+
+        [FunctionName("CheckRole")]
+        public static async Task<string> showRole(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            string uid = req.Query["uid"];
+            return await Api.Database.CheckRole(uid);
+        }
+
+        [FunctionName("Religion")]
+        public static async Task<string> religion(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            ILogger log) => await Api.Database.GetReligion();
+
+        [FunctionName("Blood")]
+        public static async Task<string> blood(
+           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log) => await Api.Database.GetBlood();
+
+        [FunctionName("Relationship")]
+        public static async Task<string> relationship(
+           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log) => await Api.Database.GetRelationship();
+
+        [FunctionName("MilitaryCriterion")]
+        public static async Task<string> MilitaryCriterion(
+           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log) => await Api.Database.GetMilitaryCriterion();
+
+        [FunctionName("Province")]
+        public static async Task<string> province(
+          [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+          ILogger log) => await Api.Database.GetProvince();
     }
 }

@@ -95,5 +95,14 @@ namespace JobRecruitmentApi
         public static async Task<string> province(
           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
           ILogger log) => await Api.Database.GetProvince();
+        [FunctionName("CheckProfile")]
+        public static async Task<string> CheckProfule(
+          [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+          ILogger log)
+        {
+            string uid = req.Query["uid"];
+            return await Api.Database.CheckProfile(uid);
+        }
     }
+
 }

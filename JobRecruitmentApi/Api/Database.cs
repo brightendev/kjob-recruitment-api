@@ -57,6 +57,13 @@ namespace JobRecruitmentApi.Api
 
         public static async Task<string> GetMilitaryCriterion() => await AzureResources.SqlDatabase.Select($"SELECT * FROM dbo.MilitaryCriterion;");
 
-
+        public static async Task<string> CheckProfile(string uid)
+        {
+            string sqlQuery = $"SELECT * FROM dbo.Profile WHERE owner_uid='{uid}'; ";
+            string result = await AzureResources.SqlDatabase.Select(sqlQuery);
+            if (result.Equals("[]")) { return "NONE"; }
+            if (result.Equals("ERROR")) { return "ERROR"; }
+            return "HAVE";
+        }
     }
 }

@@ -50,7 +50,7 @@ namespace JobRecruitmentApi.AzureResources
             {
                 if (sql == null || sql.Equals(""))
                 {
-                    throw new Exception("sql query is empty");
+                    throw new Exception("ERROR");
                 }
                 StringBuilder sb = new StringBuilder();
                 StringWriter sw = new StringWriter(sb);
@@ -86,7 +86,8 @@ namespace JobRecruitmentApi.AzureResources
             }
             catch (Exception ex)
             {
-                return $"ERROR:{ex.Message}";
+                Console.WriteLine($"ERROR:{ex.Message}");
+                return "ERROR";
             }
         }
 

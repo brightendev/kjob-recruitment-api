@@ -85,8 +85,9 @@ namespace JobRecruitmentApi
             string telephone = req.Query["telephone"];
             string email = req.Query["email"];
             string owner_uid = req.Query["owner_uid"];
+            string gender = req.Query["gender"];
             return await Api.Database.CreateProfile(personal_id,thai_name,eng_name,date_of_birth,nationality,
-                race,religion,blood,relationship,child,military_criterion,address,province,telephone,email,owner_uid);
+                race,religion,blood,relationship,child,military_criterion,address,province,telephone,email,owner_uid,gender);
         }
 
         [FunctionName("CheckRole")]
@@ -122,5 +123,14 @@ namespace JobRecruitmentApi
         public static async Task<string> province(
           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
           ILogger log) => await Api.Database.GetProvince();
+        [FunctionName("CheckProfile")]
+        public static async Task<string> CheckProfule(
+          [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+          ILogger log)
+        {
+            string uid = req.Query["uid"];
+            return await Api.Database.CheckProfile(uid);
+        }
     }
+
 }

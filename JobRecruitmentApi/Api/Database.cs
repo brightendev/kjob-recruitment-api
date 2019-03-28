@@ -74,6 +74,28 @@ namespace JobRecruitmentApi.Api
                 "}";
             return result;
         }
-        
+
+        public static async Task<string> GetReligion() => await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.Religion;");
+
+        public static async Task<string> GetBlood() => await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.Blood;");
+
+        public static async Task<string> GetRelationship() => await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.Relationship;");
+
+        public static async Task<string> GetProvince() => await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.Province;");
+
+        public static async Task<string> GetMilitaryCriterion() => await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.MilitaryCriterion;");
+
+        public static async Task<string> GetAccount(string email) {       
+            string sqlQuery = $"SELECT * FROM dbo.Account WHERE email='{email}' AND role=3;";
+            string cherckRole = await AzureResources.SqlDatabase.Query(sqlQuery);
+            if (cherckRole.Equals("[]")) {
+                return "Not entitled";
+            }
+            sqlQuery = "SELECT Account.email , Account.last_login , Role.role_name FROM Account INNER JOIN Role ON  Role.role_id = Account.role; ";
+            return await AzureResources.SqlDatabase.Query(sqlQuery);
+
+
+        }
+
     }
 }

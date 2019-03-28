@@ -82,7 +82,6 @@ namespace JobRecruitmentApi.AzureResources
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"ERROR:{ex.Message}");
                 return "ERROR";
             }
         }

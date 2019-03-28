@@ -10,12 +10,7 @@ namespace JobRecruitmentApi.AzureResources
 {
     static class SqlDatabase
     {
-        public static async Task<string> Insert(string sql) => await NoQuery(sql);
-        public static async Task<string> Update(string sql) => await NoQuery(sql);
-        public static async Task<string> Delete(string sql) => await NoQuery(sql);
-        public static async Task<string> Select(string sql) => await Query(sql);
-
-        private static async Task<string> NoQuery(string sql)
+        public static async Task<string> NoQuery(string sql)
         {
             string connectionString = Environment.GetEnvironmentVariable("sql_write");
             try
@@ -43,7 +38,7 @@ namespace JobRecruitmentApi.AzureResources
             }
         }
 
-        private static async Task<string> Query(string sql)
+        public static async Task<string> Query(string sql)
         {
             string connectionString = Environment.GetEnvironmentVariable("sql_read");
             try
@@ -62,6 +57,7 @@ namespace JobRecruitmentApi.AzureResources
                         SqlDataReader reader = command.ExecuteReader();
                         using (JsonWriter jsonWriter = new JsonTextWriter(sw))
                         {
+                            
                             jsonWriter.WriteStartArray();
                             while (reader.Read())
                             {
@@ -86,7 +82,6 @@ namespace JobRecruitmentApi.AzureResources
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"ERROR:{ex.Message}");
                 return "ERROR";
             }
         }

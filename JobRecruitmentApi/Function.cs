@@ -98,6 +98,20 @@ namespace JobRecruitmentApi
             string uid = req.Query["uid"];
             return await Api.Database.CheckRole(uid);
         }
+ 
+        [FunctionName("CheckProfile")]
+        public static async Task<string> CheckProfule(
+          [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+          ILogger log)
+        {
+            string uid = req.Query["uid"];
+            return await Api.Database.CheckProfile(uid);
+        }
+        
+        [FunctionName("GetPublicData")]
+        public static async Task<string> GetPublic(
+          [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+          ILogger log) => await Api.Database.getPublic();
 
         [FunctionName("Religion")]
         public static async Task<string> religion(
@@ -123,13 +137,14 @@ namespace JobRecruitmentApi
         public static async Task<string> province(
           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
           ILogger log) => await Api.Database.GetProvince();
-        [FunctionName("CheckProfile")]
-        public static async Task<string> CheckProfule(
-          [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
-          ILogger log)
+
+        [FunctionName("GetAccount")]
+        public static async Task<string> getAccount(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log)
         {
-            string uid = req.Query["uid"];
-            return await Api.Database.CheckProfile(uid);
+            string email = req.Query["email"];
+            return await Api.Database.GetAccount(email);
         }
     }
 

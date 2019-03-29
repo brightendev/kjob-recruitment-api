@@ -97,5 +97,38 @@ namespace JobRecruitmentApi.Api
 
         }
 
+        public static async Task<string> AccountData(string uid) {
+            string sqlQueryAccount = $"SELECT Account.email , Account.last_login , Account.created_date " +
+                $"FROM Account WHERE uid='{uid}';";
+            string account = await AzureResources.SqlDatabase.QueryOne(sqlQueryAccount);
+            if (account.Equals("")) {
+                return "Not Account";
+            }
+            string sqlQueryProfil = $"SELECT Profile.personal_id,Profile.thai_name,Profile.eng_name,Profile.date_of_birth,Profile.nationality," +
+                $"Profile.race,Religion.religion_name,Blood.blood_name,Relationship.relationship_name,Profile.child," +
+                $"MilitaryCriterion.military_criterion_name,Profile.address,Province.province_name,Profile.telephone," +
+                $"Profile.email,Gender.gender_name FROM Profile " +
+                $" INNER JOIN Religion ON Profile.religion=Religion.religion_id " +
+                $" INNER JOIN Blood ON Profile.blood=Blood.blood_id " +
+                $" INNER JOIN Relationship ON Profile.relationship=Relationship.relationship_id " +
+                $" INNER JOIN MilitaryCriterion ON Profile.military_criterion=MilitaryCriterion.military_criterion_id " +
+                $" INNER JOIN Province ON Profile.province=Province.province_id" +
+                $" INNER JOIN Gender ON Profile.gender=Gender.gender_id " +
+                $" WHERE owner_uid = '{uid}';";
+            string profile = await AzureResources.SqlDatabase.QueryOne(sqlQueryProfil);
+            if (profile.Equals("")) {
+                return "Not Profile";
+            }
+            string Json = "{" +
+                $"Account : {account}," +
+                $"Profile : {profile}" +
+                "}";
+            return Json;
+
+
+
+
+        }
+
     }
 }

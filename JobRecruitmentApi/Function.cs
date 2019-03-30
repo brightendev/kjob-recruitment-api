@@ -146,6 +146,15 @@ namespace JobRecruitmentApi
             string email = req.Query["email"];
             return await Api.Database.GetAccount(email);
         }
+
+        [FunctionName("GetAccountData")]
+        public static async Task<string> accountData(
+           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log)
+        {
+            string uid = req.Query["uid"];
+            return await Api.Database.AccountData(uid);
+        }
     }
 
 }

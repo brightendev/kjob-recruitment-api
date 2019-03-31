@@ -63,12 +63,14 @@ namespace JobRecruitmentApi.Api
             string Blood = await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.Blood;");
             string Relationship = await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.Relationship;");
             string MilitaryCriterion = await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.MilitaryCriterion;");
+            string Gender = await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.Gender;");
             result = "{" +
                 $"{'"'}Religion{'"'} : {Religion}," +
                 $"{'"'}Province{'"'} : {Province}," +
                 $"{'"'}Blood{'"'} : {Blood}," +
                 $"{'"'}Relationship{'"'} : {Relationship}," +
-                $"{'"'}MilitaryCriterion{'"'} : {MilitaryCriterion}" +
+                $"{'"'}MilitaryCriterion{'"'} : {MilitaryCriterion}," +
+                $"{'"'}Gender{'"'} : {Gender}" +
                 "}";
             return result;
         }
@@ -119,8 +121,8 @@ namespace JobRecruitmentApi.Api
                 return "Not Profile";
             }
             string Json = "{" +
-                $"Account : {account}," +
-                $"Profile : {profile}" +
+                $"{'"'}Account{'"'} : {account}," +
+                $"{'"'}Profile{'"'} : {profile}" +
                 "}";
             return Json;
 
@@ -141,14 +143,14 @@ namespace JobRecruitmentApi.Api
                 if (result.Equals("OK"))
                 {
                     return "{" +
-                        $"result : 'success'," +
-                        $"{setting} : 'on' " +
+                        $"{'"'}result{'"'} : {'"'}success{'"'}," +
+                        $"{'"'}{setting}{'"'} : {'"'}on{'"'} " +
                         "}";
                 }
                 else
                 {
                     return "{" +
-                        $"error : '{result}' " +
+                        $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
                         "}";
                 }
             }
@@ -159,14 +161,14 @@ namespace JobRecruitmentApi.Api
                 if (result.Equals("OK"))
                 {
                     return "{" +
-                        $"result : 'success'," +
-                        $"{setting} : 'off'" +
+                        $"{'"'}result{'"'} : {'"'}success{'"'}," +
+                        $"{'"'}{setting}{'"'} : {'"'}off{'"'}" +
                         "}";
                 }
                 else
                 {
                     return "{" +
-                        $"error : '{result}' " +
+                        $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
                         "}";
                 }
 
@@ -194,8 +196,8 @@ namespace JobRecruitmentApi.Api
             if (result.Equals("OK"))
             {
                 return "{" +
-                    "result : 'success'," +
-                    $"{edit} : '{value}'" +
+                    $"{'"'}result{'"'} : {'"'}success{'"'}," +
+                    $"{'"'}{edit}{'"'} : {'"'}{value}{'"'}" +
                     "}";
             }
             else
@@ -214,14 +216,14 @@ namespace JobRecruitmentApi.Api
             if (result.Equals("OK"))
             {
                 return "{" +
-                    "result : 'success'," +
-                    $"{edit} : {value}" +
+                    $"{'"'}result{'"'} : {'"'}success{'"'}," +
+                    $"{'"'}{edit}{'"'} : {value}" +
                     "}";
             }
             else
             {
                 return "{" +
-                       $"error : '{result}' " +
+                       $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
                        "}";
             }
         }

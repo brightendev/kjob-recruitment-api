@@ -127,6 +127,26 @@ namespace JobRecruitmentApi
             string uid = req.Query["uid"];
             return await Api.Database.AccountData(uid);
         }
+        
+        [FunctionName("EditUser")]
+        public static async Task<string> editUser(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log)
+        {
+            string edit = req.Query["edit"];
+            string value = req.Query["value"];
+            string uid = req.Query["uid"];
+            string st = "set";
+            if (st.Equals(edit.Substring(0,3)))
+            {
+                return await Api.Database.EditUserNotif(edit, value, uid);
+            }
+            else
+            {
+                return await Api.Database.EditProfile(edit, value, uid);
+            }
+
+        }
     }
 
 }

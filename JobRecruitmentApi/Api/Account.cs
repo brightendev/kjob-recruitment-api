@@ -52,11 +52,12 @@ namespace JobRecruitmentApi.Api
             }
                 
             string accountId = extractAccountId(authenticateResult);
+            string accountRole = await Api.Database.CheckRole(accountId);
 
             var payload = new {
                 email = email,
                 uid = accountId,
-                role = "Candidate"
+                role = accountRole
             };
 
             return JsonConvert.SerializeObject(payload);

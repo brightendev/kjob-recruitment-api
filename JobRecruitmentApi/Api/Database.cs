@@ -40,11 +40,10 @@ namespace JobRecruitmentApi.Api
                 $"WHERE dbo.Account.uid = '{uid}'; ";
             String result = await AzureResources.SqlDatabase.Query(sqlQuery);
             if (result.Equals("[]")) { return "No Account"; };
-            if (result.Equals("ERROR")) { return "ERROR"; }
+            if ("ERROR".Equals(result.Substring(4))) { return "ERROR"; }
             result = result.Substring(0, result.Length-3);
             result = result.Substring(15);
             return result;
-
         }
 
         public static async Task<string> CheckProfile(string uid)
@@ -52,11 +51,10 @@ namespace JobRecruitmentApi.Api
             string sqlQuery = $"SELECT * FROM dbo.Profile WHERE owner_uid='{uid}'; ";
             string result = await AzureResources.SqlDatabase.Query(sqlQuery);
             if (result.Equals("[]")) { return "NONE"; }
-            if (result.Equals("ERROR")) { return "ERROR"; }
+            if ("ERROR".Equals(result.Substring(4))) { return "ERROR"; }
             return "HAVE";
         }
         
-
         public static async Task<string> getPublic()
         {
             string result = "";
@@ -65,12 +63,14 @@ namespace JobRecruitmentApi.Api
             string Blood = await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.Blood;");
             string Relationship = await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.Relationship;");
             string MilitaryCriterion = await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.MilitaryCriterion;");
+            string Gender = await AzureResources.SqlDatabase.Query($"SELECT * FROM dbo.Gender;");
             result = "{" +
                 $"{'"'}Religion{'"'} : {Religion}," +
                 $"{'"'}Province{'"'} : {Province}," +
                 $"{'"'}Blood{'"'} : {Blood}," +
                 $"{'"'}Relationship{'"'} : {Relationship}," +
-                $"{'"'}MilitaryCriterion{'"'} : {MilitaryCriterion}" +
+                $"{'"'}MilitaryCriterion{'"'} : {MilitaryCriterion}," +
+                $"{'"'}Gender{'"'} : {Gender}" +
                 "}";
             return result;
         }
@@ -100,7 +100,8 @@ namespace JobRecruitmentApi.Api
         public static async Task<string> AccountData(string uid) {
             string sqlQueryAccount = $"SELECT Account.email , Account.last_login , Account.created_date " +
                 $"FROM Account WHERE uid='{uid}';";
-            string account = await AzureResources.SqlDatabase.QueryOne(sqlQueryAccount);
+            string account =
+ await AzureResources.SqlDatabase.QueryOne(sqlQueryAccount);
             if (account.Equals("")) {
                 return "Not Account";
             }
@@ -120,14 +121,111 @@ namespace JobRecruitmentApi.Api
                 return "Not Profile";
             }
             string Json = "{" +
-                $"Account : {account}," +
-                $"Profile : {profile}" +
+                $"{'"'}Account{'"'} : {account}," +
+                $"{'"'}Profile{'"'} : {profile}" +
                 "}";
             return Json;
 
 
 
 
+        }
+
+        public static async Task<string> EditUserNotif(string edit,string value,string uid)
+        {
+            string setting = edit.Substring(8, edit.Length - 8);
+            string sql;
+            string result;
+            if (value.Equals("on"))
+            {
+                sql = $"UPDATE Account SET {setting} = 'True' WHERE uid='{uid}';";
+                result = await AzureResources.SqlDatabase.NoQuery(sql);
+                if (result.Equals("OK"))
+                {
+                    return "{" +
+                        $"{'"'}result{'"'} : {'"'}success{'"'}," +
+                        $"{'"'}{setting}{'"'} : {'"'}on{'"'} " +
+                        "}";
+                }
+                else
+                {
+                    return "{" +
+                        $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
+                        "}";
+                }
+            }
+            else
+            {
+                sql = $"UPDATE Account SET {setting} = 'False' WHERE uid='{uid}';";
+                result = await AzureResources.SqlDatabase.NoQuery(sql);
+                if (result.Equals("OK"))
+                {
+                    return "{" +
+                        $"{'"'}result{'"'} : {'"'}success{'"'}," +
+                        $"{'"'}{setting}{'"'} : {'"'}off{'"'}" +
+                        "}";
+                }
+                else
+                {
+                    return "{" +
+                        $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
+                        "}";
+                }
+
+            }
+           
+        }
+
+        public static async Task<string> EditProfile(string edit, string value, string uid)
+        {
+            string[] st = { "gender", "blood", "relationship", "child", "military_criterion", "province" };
+            if (Array.IndexOf(st, edit) > 0)
+            {
+                return await EditProfile2(edit, value, uid);
+            }
+            else
+            {
+                return await EditProfile1(edit, value, uid);
+            }
+        }
+
+        private static async Task<string> EditProfile1(string edit, string value, string uid)
+        {
+            string sql = $"UPDATE Profile SET {edit} = '{value}' WHERE owner_uid = '{uid}';";
+            string result = await AzureResources.SqlDatabase.NoQuery(sql);
+            if (result.Equals("OK"))
+            {
+                return "{" +
+                    $"{'"'}result{'"'} : {'"'}success{'"'}," +
+                    $"{'"'}{edit}{'"'} : {'"'}{value}{'"'}" +
+                    "}";
+            }
+            else
+            {
+                return "{" +
+                       $"error : '{result}' " +
+                       "}";
+            }
+
+        }
+
+        private static async Task<string> EditProfile2(string edit, string value, string uid)
+        {
+            string sql = $"UPDATE Profile SET {edit} = {value}  WHERE owner_uid = '{uid}';";
+            string result = await AzureResources.SqlDatabase.NoQuery(sql);
+            if (result.Equals("OK"))
+            {
+                return "{" +
+                    $"{'"'}result{'"'} : {'"'}success{'"'}," +
+                    $"{'"'}{edit}{'"'} : {value}" +
+                    "}";
+            }
+            else
+            {
+                return "{" +
+                       $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
+                       "}";
+            }
         }
 
     }

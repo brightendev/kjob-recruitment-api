@@ -27,14 +27,13 @@ namespace JobRecruitmentApi.AzureResources
                         command.ExecuteNonQuery();
                         conn.Close();
                         return "OK";
-
                     }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return "ERROR";
+                return $"ERROR:{ex.Message}";
             }
         }
 

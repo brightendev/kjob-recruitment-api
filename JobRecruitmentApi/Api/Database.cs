@@ -48,13 +48,21 @@ namespace JobRecruitmentApi.Api
 
         public static async Task<string> CheckProfile(string uid)
         {
-            string sqlQuery = $"SELECT * FROM dbo.Profile WHERE owner_uid='{uid}'; ";
+            string sqlQuery = $"SELECT * FROM dbo.Profile WHERE owner_uid = '{uid}' ; ";
             string result = await AzureResources.SqlDatabase.Query(sqlQuery);
             if (result.Equals("[]")) { return "NONE"; }
             if ("ERROR".Equals(result.Substring(4))) { return "ERROR"; }
             return "HAVE";
         }
-        
+        public static async Task<string> CheckAccount(string uid)
+        {
+            string sqlQuery = $"SELECT email FROM dbo.Account WHERE uid = '{uid}'; ";
+            string result = await AzureResources.SqlDatabase.Query(sqlQuery);
+            if (result.Equals("[]")) { return "NONE"; }
+            if ("ERROR".Equals(result.Substring(4))) { return "ERROR"; }
+            return "HAVE";
+        }
+
         public static async Task<string> getPublic()
         {
             string result = "";
@@ -136,6 +144,13 @@ namespace JobRecruitmentApi.Api
             string setting = edit.Substring(8, edit.Length - 8);
             string sql;
             string result;
+            string checkAccount = await CheckAccount(uid);
+            if (! checkAccount.Equals("HAVE"))
+            {
+                return "{" +
+                        $"{'"'}error{'"'} : {'"'}NOT ACCOUNT{'"'} " +
+                        "}";
+            }
             if (value.Equals("on"))
             {
                 sql = $"UPDATE Account SET {setting} = 'True' WHERE uid='{uid}';";
@@ -178,6 +193,20 @@ namespace JobRecruitmentApi.Api
 
         public static async Task<string> EditProfile(string edit, string value, string uid)
         {
+            string check = await CheckAccount(uid);
+            if (!check.Equals("HAVE"))
+            {
+                return "{" +
+                        $"{'"'}error{'"'} : {'"'}NOT ACCOUNT{'"'} " +
+                        "}";
+            }
+            if (check.Equals("[]"))
+            {
+                return "{" +
+                        $"{'"'}error{'"'} : {'"'}NOT Profile{'"'} " +
+                        "}";
+            }
+            check = await CheckProfile(uid);
             string[] st = { "gender", "blood", "relationship", "child", "military_criterion", "province" };
             if (Array.IndexOf(st, edit) > 0)
             {
@@ -226,6 +255,50 @@ namespace JobRecruitmentApi.Api
                        $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
                        "}";
             }
+        }
+
+        public static async Task<string> Get(string get ,string uid)
+        {
+            string sql;
+            string resule;
+            if (get.Equals("Account"))
+            {
+                sql = $"SELECT * FROM {get} WHERE uid = '{uid}'";
+                resule = "" + await AzureResources.SqlDatabase.QueryOne(sql);
+                if (resule.Equals(""))
+                {
+                    return "{" +
+                       $"{'"'}error{'"'} : {'"'}NOT ACCOUNT{'"'} " +
+                       "}";
+                }
+                else
+                {
+                    return "{" +
+                       $"{'"'}Account{'"'} : {resule} " +
+                       "}";
+
+                }
+
+            }
+            else
+            {
+                sql = $"SELECT * FROM {get} WHERE owner_uid = '{uid}' ";
+                resule = "" + await AzureResources.SqlDatabase.QueryOne(sql);
+                if (resule.Equals(""))
+                {
+                    return "{" +
+                       $"{'"'}error{'"'} : {'"'}NOT Profile{'"'} " +
+                       "}";
+                }
+                else
+                {
+                    return "{" +
+                       $"{'"'}Profile{'"'} : {resule} " +
+                       "}";
+
+                }
+            }
+            
         }
 
     }

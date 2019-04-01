@@ -147,6 +147,16 @@ namespace JobRecruitmentApi
             }
 
         }
+
+        [FunctionName("GetUser")]
+        public static async Task<string> getUser(
+           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log)
+        {
+            string get = req.Query["get"];
+            string uid = req.Query["uid"];
+            return await Api.Database.Get(get,uid);
+        }
     }
 
 }

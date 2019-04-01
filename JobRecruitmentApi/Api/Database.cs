@@ -273,10 +273,7 @@ namespace JobRecruitmentApi.Api
                 }
                 else
                 {
-                    return "{" +
-                       $"{'"'}Account{'"'} : {resule} " +
-                       "}";
-
+                    return resule;
                 }
 
             }
@@ -292,9 +289,7 @@ namespace JobRecruitmentApi.Api
                 }
                 else
                 {
-                    return "{" +
-                       $"{'"'}Profile{'"'} : {resule} " +
-                       "}";
+                    return resule;
 
                 }
             }

@@ -296,5 +296,64 @@ namespace JobRecruitmentApi.Api
             
         }
 
+        public static async Task<string> AddJob(string tital,string max,string min,string category,string create,string modified,
+            string d1,string d2,string d3,string d4,string d5)
+        {
+            string sql = $"INSERT INTO Job (title,min_salary,max_salary,category,created_date,modified_date,detail_1," +
+                $"detail_2,detail_3,detail_4,detail_5)" +
+                $" VALUES('{tital}',{max},{min},{category},'{create}','{modified}','{d1}','{d2}','{d3}','{d4}','{d5}');";
+            string result = await AzureResources.SqlDatabase.NoQuery(sql);
+            if (!result.Equals("OK"))
+            {
+                return "{" +
+                       $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
+                       "}";
+
+            }
+            else
+            {
+                return "{" +
+                       $"{'"'}result{'"'} : {'"'}success{'"'} " +
+                       "}";
+            }
+        }
+
+        public static async Task<string> GetJob(string id)
+        {
+            string sql;
+            string result;
+            if (id.Equals("all"))
+            {
+                sql = $"SELECT id,title,min_salary,max_salary,category,created_date,modified_date,detail_1 FROM Job ;";
+                result = await AzureResources.SqlDatabase.Query(sql);
+                if (result.Equals("[]"))
+                {
+                    return "{" +
+                       $"{'"'}error{'"'} : {'"'}Not Job{'"'} " +
+                       "}";
+                }
+                else
+                {
+                    return result;
+                }
+            }
+            else
+            {
+                sql = $"SELECT * FROM Job WHERE id = {id};";
+                result = ""+await AzureResources.SqlDatabase.QueryOne(sql);
+                if (result.Equals(""))
+                {
+                    return "{" +
+                       $"{'"'}error{'"'} : {'"'}Not Job{'"'} " +
+                       "}";
+                }
+                else
+                {
+                    return result;
+                }
+
+            }
+            
+        }
     }
 }

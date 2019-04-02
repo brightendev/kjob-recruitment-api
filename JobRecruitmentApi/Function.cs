@@ -185,6 +185,35 @@ namespace JobRecruitmentApi
             string uid = req.Query["uid"];
             return await Api.Database.Get(get,uid);
         }
+
+        [FunctionName("AddJob")]
+        public static async Task<string> addJob(
+           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log)
+        {
+            string title = req.Query["title"];
+            string min_salary = req.Query["min_salary"];
+            string max_salary = req.Query["max_salary"];
+            string category = req.Query["category"];
+            string created_date = req.Query["created_date"];
+            string modified_date = req.Query["modified_date"];
+            string detail_1 = req.Query["detail_1"];
+            string detail_2 = req.Query["detail_2"];
+            string detail_3 = req.Query["detail_3"];
+            string detail_4 = req.Query["detail_4"];
+            string detail_5 = req.Query["detail_5"];
+            return await Api.Database.AddJob(title,min_salary,max_salary,category,created_date,modified_date,
+                detail_1,detail_2,detail_3,detail_4,detail_5);
+        }
+
+        [FunctionName("GetJob")]
+        public static async Task<string> getJob(
+           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log)
+        {
+            string job = req.Query["job"];
+            return await Api.Database.GetJob(job);
+        }
     }
 
 }

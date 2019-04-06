@@ -355,5 +355,106 @@ namespace JobRecruitmentApi.Api
             }
             
         }
+
+        public static async Task<string> AddCategory(string name)
+        {
+            string sql = $"INSERT INTO JobCategory (name) VALUES ('{name}') ;";
+            string result = await AzureResources.SqlDatabase.NoQuery(sql);
+            if (!result.Equals("OK"))
+            {
+                return "{" +
+                      $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
+                      "}";
+            }
+            else
+            {
+                sql = "SELECT TOP(1) id FROM JobCategory ORDER BY id DESC ;";
+                result = await AzureResources.SqlDatabase.QueryOne(sql);
+                return "{" +
+                    $"{'"'}category_add{'"'} : {'"'}success{'"'} ," +
+                    $"{'"'}category{'"'} : " +
+                        "{ " +
+                        $"{result.Substring(1,result.Length-2)} " +
+                        $"," +
+                        $"{'"'}name{'"'} : {'"'}{name}{'"'}" +
+                        "}" +
+                    "}";
+            }
+            
+        }
+
+        public static async Task<string> GetCategory(string id)
+        {
+            string sql;
+            string result;
+            if (id.Equals("all"))
+            {
+                sql = "SELECT * FROM JobCategory ;";
+                result = await AzureResources.SqlDatabase.Query(sql);
+                if (result.Equals("[]"))
+                {
+                    return "{" +
+                        $"{'"'}error{'"'} : {'"'}Not JobCategory Data{'"'} " +
+                        "}";
+                }
+                else
+                {
+                    return result;
+                }
+            }
+            else
+            {
+                sql = $"SELECT * FROM JobCategory WHERE id = {id} ";
+                result = "" + await AzureResources.SqlDatabase.QueryOne(sql);
+                if (result.Equals(""))
+                {
+                    return "{" +
+                        $"{'"'}error{'"'} : {'"'}Not JobCategory id = {id} . {'"'} " +
+                        "}";
+
+                }
+                else if (result.Equals("ERROR"))
+                {
+                    return "{" +
+                        $"{'"'}error{'"'} : {'"'}ERROR: INPUT id = '{id}' .{'"'} " +
+                        "}";
+
+                }
+                else
+                {
+                    return result;
+                }
+            }
+        }
+
+        public static async Task<string> DeleteCategory(string id)
+        {
+            string sql = $"SELECT id FROM JobCategory WHERE id = {id} ;";
+            string result=""+ await AzureResources.SqlDatabase.QueryOne(sql);
+            if (result.Equals(""))
+            {
+                return "{" +
+                         $"{'"'}error{'"'} : {'"'}Not JobCategory id = {id} . {'"'} " +
+                         "}";
+            }
+            else
+            {
+                sql = $"DELETE FROM JobCategory WHERE id = {id}";
+                result = await AzureResources.SqlDatabase.NoQuery(sql);
+                if (!result.Equals("OK"))
+                {
+                    return "{" +
+                     $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
+                     "}";
+                }
+                else
+                {
+                    return "{" +
+                     $"{'"'}category_del{'"'} : {'"'}success{'"'} " +
+                     "}";
+                }
+            }
+
+        }
     }
 }

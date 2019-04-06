@@ -186,6 +186,33 @@ namespace JobRecruitmentApi
             string job = req.Query["job"];
             return await Api.Database.GetJob(job);
         }
+
+        [FunctionName("AddCategory")]
+        public static async Task<string> addCategory(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log)
+        {
+            string name = req.Query["name"];
+            return await Api.Database.AddCategory(name);
+        }
+
+        [FunctionName("GetCategory")]
+        public static async Task<string> getCategory(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log)
+        {
+            string id = req.Query["id"];
+            return await Api.Database.GetCategory(id);
+        }
+
+        [FunctionName("DeleteCategory")]
+        public static async Task<string> deleteCategory(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log)
+        {
+            string id = req.Query["id"];
+            return await Api.Database.DeleteCategory(id);
+        }
     }
 
 }

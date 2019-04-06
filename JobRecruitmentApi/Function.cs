@@ -229,7 +229,7 @@ namespace JobRecruitmentApi
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
            ILogger log)
         {
-            string id = req.Query["id"];
+            string id = req.Query["category"];
             return await Api.Database.GetCategory(id);
         }
 

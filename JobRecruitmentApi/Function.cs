@@ -213,6 +213,37 @@ namespace JobRecruitmentApi
             string id = req.Query["id"];
             return await Api.Database.DeleteCategory(id);
         }
+
+        [FunctionName("AddCandidate")]
+        public static async Task<string> addCandidate(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log)
+        {
+            string owner_id = req.Query["owner_id"];
+            string candidate_id = req.Query["candidate_id"];
+            string status = req.Query["status"];
+            string extra_info = req.Query["extra_info"];
+            return await Api.Database.AddCadidate(owner_id, candidate_id, status, extra_info);
+        }
+
+        [FunctionName("GetCandidate")]
+        public static async Task<string> getCandidate(
+           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log)
+        {
+            string id = req.Query["id"];
+            return await Api.Database.GetCadidate(id);
+        }
+
+        [FunctionName("DeleteCandidate")]
+        public static async Task<string> deleteCandidate(
+           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+           ILogger log)
+        {
+            string id = req.Query["id"];
+            return await Api.Database.DeleteCandidate(id);
+        }
+
     }
 
 }

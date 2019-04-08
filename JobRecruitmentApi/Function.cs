@@ -90,6 +90,7 @@ namespace JobRecruitmentApi
                 race,religion,blood,relationship,child,military_criterion,address,province,telephone,email,owner_uid,gender);
         }
 
+        // return role of the given uid account
         [FunctionName("CheckRole")]
         public static async Task<string> showRole(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
@@ -98,7 +99,8 @@ namespace JobRecruitmentApi
             string uid = req.Query["uid"];
             return await Api.Database.CheckRole(uid);
         }
- 
+
+        // check for the existence of Profile Data which is owned by given uid account
         [FunctionName("CheckProfile")]
         public static async Task<string> CheckProfule(
           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
@@ -138,6 +140,7 @@ namespace JobRecruitmentApi
           [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
           ILogger log) => await Api.Database.GetProvince();
 
+        // return all accounts in database use for dashboard admin page (check the request query string for email to allow this function to be execute only by admin)
         [FunctionName("GetAccount")]
         public static async Task<string> getAccount(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
@@ -146,7 +149,18 @@ namespace JobRecruitmentApi
             string email = req.Query["email"];
             return await Api.Database.GetAccount(email);
         }
+        // Change Role of given email account 
+        [FunctionName("ChangeRole")]
+        public static async Task<string> ChangeRoleOfAccount(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            string email = req.Query["email"];
+            return "";
+        }
 
+
+        // <obsolete> return account and profile information of the owner of given uid
         [FunctionName("GetAccountData")]
         public static async Task<string> accountData(
            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
@@ -156,6 +170,7 @@ namespace JobRecruitmentApi
             return await Api.Database.AccountData(uid);
         }
         
+        // ============== Function for user data (account, profile, ...) ===========
         [FunctionName("EditUser")]
         public static async Task<string> editUser(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
@@ -185,7 +200,9 @@ namespace JobRecruitmentApi
             string uid = req.Query["uid"];
             return await Api.Database.Get(get,uid);
         }
+        // =========== #END Function for user data (account, profile, ...) =============
 
+        // ==================== Manipulation of Job Table ==================
         [FunctionName("AddJob")]
         public static async Task<string> addJob(
            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
@@ -214,7 +231,9 @@ namespace JobRecruitmentApi
             string job = req.Query["job"];
             return await Api.Database.GetJob(job);
         }
+        // ================= #END Manipulation of Job Table ==================
 
+        // =========== Manipulation of JobCategory Table ===================
         [FunctionName("AddCategory")]
         public static async Task<string> addCategory(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
@@ -241,7 +260,9 @@ namespace JobRecruitmentApi
             string id = req.Query["id"];
             return await Api.Database.DeleteCategory(id);
         }
+        // ======== #END Manipulation of JobCategory Table ===================
 
+        // ============ Manipulation of Candidate Table  ==============
         [FunctionName("AddCandidate")]
         public static async Task<string> addCandidate(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
@@ -271,7 +292,7 @@ namespace JobRecruitmentApi
             string id = req.Query["id"];
             return await Api.Database.DeleteCandidate(id);
         }
-
+        // ========== #END Manipulation of Candidate Table  ==============
     }
 
 }

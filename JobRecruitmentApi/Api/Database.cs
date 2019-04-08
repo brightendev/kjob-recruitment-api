@@ -456,5 +456,100 @@ namespace JobRecruitmentApi.Api
             }
 
         }
+
+        public static async Task<string> AddCadidate(string owner_id ,string candidate_id ,string status ,string extra_info)
+        {
+            string sql = $"INSERT INTO Candidate VALUES('{owner_id}','{candidate_id}',{status},'{extra_info}');";
+            string result = await AzureResources.SqlDatabase.NoQuery(sql);
+            if (!result.Equals("OK"))
+            {
+                return "{" +
+                 $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
+                 "}";
+            }
+            else
+            {
+                return "{" +
+                 $"{'"'}candidate_create{'"'} : {'"'}success{'"'} " +
+                 "}";
+            }
+
+        }
+
+        public static async Task<string> GetCadidate(string id)
+        {
+            string sql;
+            string result;
+            if (id.Equals("all"))
+            {
+                sql = "SELECT  candidate_id,status,extra_info FROM Candidate ;";
+                result = "" + await AzureResources.SqlDatabase.Query(sql);
+                if (result.Equals("[]"))
+                {
+                    return "{" +
+                    $"{'"'}error{'"'} : {'"'}NOT DATA Candidate {'"'} " +
+                    "}";
+                }
+                else
+                {
+                    return result;
+                }
+            }
+            else
+            {
+                sql = $"SELECT * FROM Candidate WHERE owner_id = '{id}' ;";
+                result = "" + await AzureResources.SqlDatabase.QueryOne(sql);
+                if (result.Equals(""))
+                {
+                    return "{" +
+                   $"{'"'}error{'"'} : {'"'}NOT Candidate  owner_id = {id} .  {'"'} " +
+                   "}";
+
+                }
+                else if (result.Equals("ERROR"))
+                {
+                    return "{" +
+                   $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
+                   "}";
+                }
+                else
+                {
+                    return result;
+                }
+            }
+        }
+
+        public static async Task<string> DeleteCandidate(string id)
+        {
+            string sql =$"SELECT * FROM Candidate WHERE owner_id = '{id}' ;";
+            string result="" + await AzureResources.SqlDatabase.QueryOne(sql);
+            if (result.Equals(""))
+            {
+                return "{" +
+                      $"{'"'}error{'"'} : {'"'}NOT Candidate id = {id} .{'"'} " +
+                      "}";
+
+            }
+            else
+            {
+
+                sql = $"DELETE FROM Candidate WHERE owner_id = '{id}' ;";
+                result = await AzureResources.SqlDatabase.NoQuery(sql);
+                if (!result.Equals("OK"))
+                {
+                    return "{" +
+                     $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
+                     "}";
+                }
+                else
+                {
+                    return "{" +
+                    $"{'"'}candidate_delete{'"'} : {'"'}success{'"'} " +
+                    "}";
+                }
+
+            }
+            
+        }
     }
 }

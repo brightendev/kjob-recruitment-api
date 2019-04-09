@@ -156,6 +156,7 @@ namespace JobRecruitmentApi
             ILogger log)
         {
             string email = req.Query["email"];
+            string role = req.Query["role"];
             return "";
         }
 
@@ -231,9 +232,29 @@ namespace JobRecruitmentApi
             string job = req.Query["job"];
             return await Api.Database.GetJob(job);
         }
+
+        [FunctionName("EditJob")]
+        public static async Task<string> EditJob(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            string job = req.Query["job"];
+            string title = req.Query["title"];
+            string min_salary = req.Query["min_salary"];
+            string max_salary = req.Query["max_salary"];
+            string category = req.Query["category"];
+            string modified_date = req.Query["modified_date"];
+            string detail_1 = req.Query["detail_1"];
+            string detail_2 = req.Query["detail_2"];
+            string detail_3 = req.Query["detail_3"];
+            string detail_4 = req.Query["detail_4"];
+            string detail_5 = req.Query["detail_5"];
+
+            return "";
+        }
         // ================= #END Manipulation of Job Table ==================
 
-        // =========== Manipulation of JobCategory Table ===================
+            // =========== Manipulation of JobCategory Table ===================
         [FunctionName("AddCategory")]
         public static async Task<string> addCategory(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,

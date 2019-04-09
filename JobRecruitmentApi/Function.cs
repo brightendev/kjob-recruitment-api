@@ -205,14 +205,14 @@ namespace JobRecruitmentApi
             return await Api.Database.Get(get,uid);
         }
         // =========== #END Function for user data (account, profile, ...) =============
-
+        
         // ==================== Manipulation of Job Table ==================
         [FunctionName("AddJob")]
         public static async Task<string> addJob(
            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
            ILogger log)
         {
-            string title = req.Query["title"];
+        /*    string title = req.Query["title"];
             string min_salary = req.Query["min_salary"];
             string max_salary = req.Query["max_salary"];
             string category = req.Query["category"];
@@ -222,7 +222,23 @@ namespace JobRecruitmentApi
             string detail_2 = req.Query["detail_2"];
             string detail_3 = req.Query["detail_3"];
             string detail_4 = req.Query["detail_4"];
-            string detail_5 = req.Query["detail_5"];
+            string detail_5 = req.Query["detail_5"];*/
+
+            string requestBody = await (new StreamReader(req.Body)).ReadToEndAsync();
+            JobPostRequest jobData = JsonConvert.DeserializeObject<JobPostRequest>(requestBody);
+
+            string title = jobData.title;
+            string min_salary = jobData.min_salary;
+            string max_salary = jobData.max_salary;
+            string category = jobData.category;
+            string created_date = jobData.created_date;
+            string modified_date = jobData.modified_date;
+            string detail_1 = jobData.detail_1;
+            string detail_2 = jobData.detail_2;
+            string detail_3 = jobData.detail_3;
+            string detail_4 = jobData.detail_4;
+            string detail_5 = jobData.detail_5;
+
             return await Api.Database.AddJob(title,min_salary,max_salary,category,created_date,modified_date,
                 detail_1,detail_2,detail_3,detail_4,detail_5);
         }
@@ -317,6 +333,22 @@ namespace JobRecruitmentApi
             return await Api.Database.DeleteCandidate(id);
         }
         // ========== #END Manipulation of Candidate Table  ==============
+
+        // === class for store job data
+        public class JobPostRequest
+        {
+            public string title { get; set; }
+            public string min_salary { get; set; }
+            public string max_salary { get; set; }
+            public string category { get; set; }
+            public string created_date { get; set; }
+            public string modified_date { get; set; }
+            public string detail_1 { get; set; }
+            public string detail_2 { get; set; }
+            public string detail_3 { get; set; }
+            public string detail_4 { get; set; }
+            public string detail_5 { get; set; }
+        }
     }
 
 }

@@ -296,12 +296,12 @@ namespace JobRecruitmentApi.Api
             
         }
 
-        public static async Task<string> AddJob(string tital,string max,string min,string category,string create,string modified,
+        public static async Task<string> AddJob(string tital,string min,string max,string category,string create,string modified,
             string d1,string d2,string d3,string d4,string d5)
         {
             string sql = $"INSERT INTO Job (title,min_salary,max_salary,category,created_date,modified_date,detail_1," +
                 $"detail_2,detail_3,detail_4,detail_5)" +
-                $" VALUES('{tital}',{max},{min},{category},'{create}','{modified}','{d1}','{d2}','{d3}','{d4}','{d5}');";
+                $" VALUES('{tital}',{min},{max},{category},'{create}','{modified}','{d1}','{d2}','{d3}','{d4}','{d5}');";
             string result = await AzureResources.SqlDatabase.NoQuery(sql);
             if (!result.Equals("OK"))
             {
@@ -550,6 +550,78 @@ namespace JobRecruitmentApi.Api
 
             }
             
+        }
+
+        public static async Task<string> ChangeRole(string email,string role)
+        {
+            string sql =$"SELECT * FROM Account WHERE email='{email}' ;";
+            string result = "" + await AzureResources.SqlDatabase.QueryOne(sql);
+            if (result.Equals(""))
+            {
+                return "{" +
+                  $"{'"'}error{'"'} : {'"'}NOT Account email={email} . {'"'} " +
+                  "}";
+
+            }
+            else
+            {
+                sql = $"UPDATE Account SET role = {role} WHERE email = '{email}' ; ";
+                result = await AzureResources.SqlDatabase.NoQuery(sql);
+                if (!result.Equals("OK"))
+                {
+                    return "{" +
+                  $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
+                  "}";
+                }
+                else
+                {
+                    return "{" +
+                  $"{'"'}ChangeRole{'"'} : {'"'}success{'"'} " +
+                  "}";
+                }
+            }
+
+        }
+
+        public static async Task<string> EditJob(string id,string tital, string min, string max, string category,  string modified,
+            string d1, string d2, string d3, string d4, string d5)
+        {
+            string sql = $"SELECT * FROM Job WHERE id = {id} ;";
+            string result = "" + await AzureResources.SqlDatabase.QueryOne(sql);
+            if (result.Equals(""))
+            {
+                return "{" +
+                  $"{'"'}error{'"'} : {'"'}NOT Job id = {id} . {'"'} " +
+                  "}";
+            }
+            else
+            {
+                sql = $"UPDATE Job SET " +
+                    $"title='{tital}'," +
+                    $"min_salary={min} ," +
+                    $"max_salary={max}," +
+                    $"category={category}," +
+                    $"modified_date='{modified}'," +
+                    $"detail_1='{d1}'," +
+                    $"detail_2='{d2}'," +
+                    $"detail_3='{d3}'," +
+                    $"detail_4='{d4}'," +
+                    $"detail_5='{d5}' " +
+                    $"WHERE id={id} ;";
+                result = await AzureResources.SqlDatabase.NoQuery(sql);
+                if (!result.Equals("OK"))
+                {
+                    return "{" +
+                  $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
+                  "}";
+                }
+                else
+                {
+                    return "{" +
+                  $"{'"'}EditJob{'"'} : {'"'}success{'"'} " +
+                  "}";
+                }
+            }
         }
     }
 }

@@ -157,7 +157,7 @@ namespace JobRecruitmentApi
         {
             string email = req.Query["email"];
             string role = req.Query["role"];
-            return "";
+            return await Api.Database.ChangeRole(email, role);
         }
 
 
@@ -250,7 +250,7 @@ namespace JobRecruitmentApi
             string detail_4 = req.Query["detail_4"];
             string detail_5 = req.Query["detail_5"];
 
-            return "";
+            return await Api.Database.EditJob(job,title,min_salary,max_salary,category,modified_date,detail_1,detail_2,detail_3,detail_4,detail_5);
         }
         // ================= #END Manipulation of Job Table ==================
 

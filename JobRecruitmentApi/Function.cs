@@ -157,6 +157,9 @@ namespace JobRecruitmentApi
         {
             string email = req.Query["email"];
             string role = req.Query["role"];
+
+            if(!Int32.TryParse(role, out int intRole) || intRole > 3 || intRole < 1) return @"{""error"":""invalid_role""}";
+
             return await Api.Database.ChangeRole(email, role);
         }
 

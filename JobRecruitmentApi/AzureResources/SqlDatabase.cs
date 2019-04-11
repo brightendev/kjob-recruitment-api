@@ -132,5 +132,34 @@ namespace JobRecruitmentApi.AzureResources
             }
         }
 
+        public static async Task<string> GetCount(string sql)
+        {
+            string result = "";
+            try
+            {
+                string connectionString = Environment.GetEnvironmentVariable("sql_read");
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(sql, conn))
+                    {
+                        await conn.OpenAsync();
+                        SqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            result = reader[0].ToString();
+                        }
+                        reader.Close();
+                        conn.Close();
+                        return result;
+                    }                  
+                }    
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return "ERROR";
+            }
+        }
+
     }
 }

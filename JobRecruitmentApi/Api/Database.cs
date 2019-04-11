@@ -402,6 +402,7 @@ namespace JobRecruitmentApi.Api
                     return result;
                 }
             }
+            
             else
             {
                 sql = $"SELECT * FROM JobCategory WHERE id = {id} ";
@@ -457,10 +458,35 @@ namespace JobRecruitmentApi.Api
 
         }
 
-        public static async Task<string> AddCadidate(string owner_id ,string candidate_id ,string status ,string extra_info,string applied_job)
+        public static async Task<string> AddCadidate(string owner_id ,string status ,string extra_info,string applied_job)
         {
-            string sql = $"INSERT INTO Candidate VALUES('{owner_id}','{candidate_id}',{status},'{extra_info}', {applied_job} );";
-            string result = await AzureResources.SqlDatabase.NoQuery(sql);
+            for (int j =applied_job.Length;j<3;j++)
+            {
+                applied_job = "0" + applied_job;
+            }
+            string sql = $"SELECT COUNT(*) FROM Candidate WHERE applied_job = {applied_job} ";
+            string result= await AzureResources.SqlDatabase.GetCount(sql);
+            string candidate_id="";
+            if (result.Equals("ERROR"))
+            {
+                return "{" +
+                $"{'"'}error{'"'} : {'"'}{result}{'"'} " +
+                "}";
+
+            }
+            else
+            {
+                candidate_id = (Convert.ToInt32(result)+1).ToString();
+                for (int i = candidate_id.Length;i<4;i++)
+                {
+                    candidate_id = "0" + candidate_id;
+
+                }
+                candidate_id = applied_job +"-"+ candidate_id;
+            }
+            
+            sql = $"INSERT INTO Candidate VALUES('{owner_id}','{candidate_id}',{status},'{extra_info}', {applied_job} );";
+            result = await AzureResources.SqlDatabase.NoQuery(sql);
             if (!result.Equals("OK"))
             {
                 return "{" +
@@ -492,9 +518,13 @@ namespace JobRecruitmentApi.Api
                 }
                 else
                 {
+                    result = result.Substring(3);
+                    result = "{" +
+                        $"{'"'}NumberTable{'"'} " +
+                        result;
                     return result;
                 }
-            }
+            }          
             else
             {
                 sql = $"SELECT * FROM Candidate WHERE owner_id = '{id}' ;";
@@ -623,5 +653,6 @@ namespace JobRecruitmentApi.Api
                 }
             }
         }
+        
     }
 }

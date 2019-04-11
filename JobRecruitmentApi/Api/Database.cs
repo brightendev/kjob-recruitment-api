@@ -457,9 +457,9 @@ namespace JobRecruitmentApi.Api
 
         }
 
-        public static async Task<string> AddCadidate(string owner_id ,string candidate_id ,string status ,string extra_info)
+        public static async Task<string> AddCadidate(string owner_id ,string candidate_id ,string status ,string extra_info,string applied_job)
         {
-            string sql = $"INSERT INTO Candidate VALUES('{owner_id}','{candidate_id}',{status},'{extra_info}');";
+            string sql = $"INSERT INTO Candidate VALUES('{owner_id}','{candidate_id}',{status},'{extra_info}', {applied_job} );";
             string result = await AzureResources.SqlDatabase.NoQuery(sql);
             if (!result.Equals("OK"))
             {

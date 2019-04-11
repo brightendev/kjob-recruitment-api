@@ -289,12 +289,11 @@ namespace JobRecruitmentApi
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
            ILogger log)
         {
-            string owner_id = req.Query["owner_id"];
-            string candidate_id = req.Query["candidate_id"];
+            string owner_id = req.Query["owner_id"];           
             string status = req.Query["status"];
             string extra_info = req.Query["extra_info"];
             string applied_job = req.Query["applied_job"];
-            return await Api.Database.AddCadidate(owner_id, candidate_id, status, extra_info, applied_job);
+            return await Api.Database.AddCadidate(owner_id, status, extra_info, applied_job);
         }
 
         [FunctionName("GetCandidate")]

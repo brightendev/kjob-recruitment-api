@@ -508,7 +508,7 @@ namespace JobRecruitmentApi.Api
             string result;
             if (id.Equals("all"))
             {
-                sql = "SELECT  candidate_id,status,extra_info FROM Candidate ;";
+                sql = "SELECT  candidate_id,status,extra_info,applied_job FROM Candidate ;";
                 result = "" + await AzureResources.SqlDatabase.Query(sql);
                 if (result.Equals("[]"))
                 {

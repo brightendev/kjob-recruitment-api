@@ -518,10 +518,6 @@ namespace JobRecruitmentApi.Api
                 }
                 else
                 {
-                    result = result.Substring(3);
-                    result = "{" +
-                        $"{'"'}NumberTable{'"'} " +
-                        result;
                     return result;
                 }
             }          
